@@ -9,5 +9,5 @@
 Link to the github project - https://github.com/LuminousIT/Fh-Dortmund_JavaCapstoneProject
 
 ### Link to Explainer Video
-
-
+- Hometask 2: Link to the video project - https://drive.google.com/file/d/1pg7YT8QxuBWu3oSyYGbr5I7E9hxt1X7S/view?usp=sharing
+- **HOMETASK 3:** 
