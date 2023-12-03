@@ -84,6 +84,7 @@ public class ChargingStation implements Serializable {
 
         try {
             if (waitingTime > MAX_WAIT_TIME * 60) {
+            	 queue.remove(car); 
                 LOGGER.info(car.getName() + " waited more than " + MAX_WAIT_TIME + " minutes and left the queue.");
             } else {
                 LOGGER.info(car.getName() + " is waiting at station " + getLocation() + ". Waiting time: " + waitingTime / 60 + " minutes");
