@@ -13,8 +13,8 @@ public class ChargingStationSimulation {
     public static void main(String[] args) {
         logSystemEvent("Starting the charging station simulation.");
 
-        ChargingStation chargingStation1 = new ChargingStation(1, 3);
-        ChargingStation chargingStation2 = new ChargingStation(2, 2);
+        ChargingStation chargingStation1 = new ChargingStation("Station A", 3);
+        ChargingStation chargingStation2 = new ChargingStation("Station B", 2);
 
 
      // Schedule cars to arrive at charging stations randomly

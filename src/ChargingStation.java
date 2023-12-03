@@ -1,4 +1,6 @@
 import java.io.BufferedWriter;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
@@ -11,19 +13,36 @@ import java.util.concurrent.TimeUnit;
 public class ChargingStation implements Serializable {
 	private static final Logger LOGGER = Logger.getLogger(ChargingStation.class.getName());
 	 private static final int MAX_WAIT_TIME = 15; // Maximum wait time in minutes
-
-    private int location;
+	 private final Lock lock = new ReentrantLock();
+	 
+    private String location;
     private boolean available;
     private int maxCapacity; // Maximum charging capacity of the station
     private int currentCapacity; // Current available charging slots
     private List<Car> queue;
 
-    public ChargingStation(int location, int maxCapacity) {
+    public ChargingStation(String location, int maxCapacity) {
         this.location = location;
         this.maxCapacity = maxCapacity;
         this.available = true;
         this.currentCapacity = maxCapacity;
         this.queue = new ArrayList<>();
+    }
+    
+   
+
+    public void chargeBattery(ReservedBattery battery, EnergySource energySource) {
+        lock.lock();
+        try {
+            LOGGER.info("Charging battery " + battery.getId() + " with " + energySource + " energy source.");
+            // Simulating charging process
+            Thread.sleep(3000); // Charging time (in milliseconds)
+            LOGGER.info("Battery " + battery.getId() + " charged successfully.");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+        }
     }
 
     public synchronized void occupy(Car car) {
@@ -50,7 +69,7 @@ public class ChargingStation implements Serializable {
 //        return location > 0; // Check if there are available slots for charging
 //    } 
     
-    public int getLocation() {
+    public String getLocation() {
         return location;
     }
 
@@ -65,6 +84,7 @@ public class ChargingStation implements Serializable {
 
         try {
             if (waitingTime > MAX_WAIT_TIME * 60) {
+            	 queue.remove(car); 
                 LOGGER.info(car.getName() + " waited more than " + MAX_WAIT_TIME + " minutes and left the queue.");
             } else {
                 LOGGER.info(car.getName() + " is waiting at station " + getLocation() + ". Waiting time: " + waitingTime / 60 + " minutes");
