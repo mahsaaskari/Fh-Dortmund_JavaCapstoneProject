@@ -1,44 +1,49 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ChargingStationSimulation {
     private static final Logger LOGGER = Logger.getLogger(ChargingStationSimulation.class.getName());
+    private static final int MAX_WAIT_TIME = 15; // Maximum wait time in minutes
 
     public static void main(String[] args) {
         logSystemEvent("Starting the charging station simulation.");
 
-        List<ChargingStation> chargingStations = new ArrayList<>();
-        List<Car> cars = new ArrayList<>();
+        ChargingStation chargingStation1 = new ChargingStation("Station A", 3);
+        ChargingStation chargingStation2 = new ChargingStation("Station B", 2);
 
-    
-     // Initialize charging stations
-        chargingStations.add(new ChargingStation(1, 3));
-        chargingStations.add(new ChargingStation(2, 2));
 
-        // Initialize cars
-        cars.add(new Car("Car1", 5000)); // Maximum wait time: 5000 ms (5 seconds)
-        cars.add(new Car("Car2", 6000)); // Maximum wait time: 6000 ms (6 seconds)
-        cars.add(new Car("Car3", 4000)); // Maximum wait time: 4000 ms (4 seconds)
-
-        logSystemEvent("Initialization complete. Starting simulation.");
-
-        // Simulate simultaneous charging for cars based on available capacity
-        for (Car car : cars) {
-        	for (ChargingStation cs : chargingStations) {
-                if (cs.isAvailable()) {
-                    cs.occupy(car);
-                    break; // Break the loop once a station is occupied
-                } else {
-                    LOGGER.info("No available slots at station " + cs.getLocation() + " for " + car.getName());
-                }
-            }
+     // Schedule cars to arrive at charging stations randomly
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(2); // Simulating two charging stations
+        Random random = new Random();
+        for (int i = 0; i < 5; i++) { // Simulating arrival of 5 cars
+            int delay = random.nextInt(10); // Random delay in seconds before a car arrives
+            int stationIndex = random.nextInt(2); // Randomly choose a station index
+            ChargingStation station = stationIndex == 0 ? chargingStation1 : chargingStation2;
+            Car car = new Car("Car" + (i + 1), 15);
+            executor.schedule(() -> station.simulateArrival(car), delay, TimeUnit.SECONDS);
         }
 
+
+        // Shut down the executor after simulation time
+        executor.shutdown();
+        try {
+            executor.awaitTermination(1, TimeUnit.MINUTES); // Simulation time (1 minute)
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    
         logSystemEvent("Simulation complete. Exiting program.");
     }
 
     private static void logSystemEvent(String logMessage) {
         LOGGER.info(logMessage);
     }
+    
+    
 }
