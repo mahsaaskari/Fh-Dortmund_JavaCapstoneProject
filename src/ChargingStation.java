@@ -20,6 +20,7 @@ public class ChargingStation implements Serializable {
     private int maxCapacity; // Maximum charging capacity of the station
     private int currentCapacity; // Current available charging slots
     private List<Car> queue;
+    EnergyManagementSystem energyManagementSystem;
 
     public ChargingStation(String location, int maxCapacity) {
         this.location = location;
@@ -29,6 +30,9 @@ public class ChargingStation implements Serializable {
         this.queue = new ArrayList<>();
     }
     
+    public ChargingStation(EnergyManagementSystem energyManagementSystem) {
+    	 this.energyManagementSystem = energyManagementSystem;
+    }
    
 
     public void chargeBattery(ReservedBattery battery, EnergySource energySource) {
@@ -43,6 +47,29 @@ public class ChargingStation implements Serializable {
         } finally {
             lock.unlock();
         }
+    }
+    
+    public void chargeBattery(ReservedBattery battery, EnergySource energySource, int amount) {
+    	 // Check with EnergyManagementSystem for energy allocation
+        boolean allocated = energyManagementSystem.allocateEnergy(energySource, amount);
+        if (allocated) {
+            // Simulate charging process using the allocated energy
+            LOGGER.info("Charging battery " + battery.getId() + " with " + energySource + " energy.");
+            // Charging process logic
+        } else {
+            LOGGER.warning("Charging not possible due to insufficient energy.");
+        }
+    }
+    
+    public void optimizeCharging() {
+        // Example: Optimize charging process by calling EnergyManagementSystem's optimization method
+        energyManagementSystem.optimizeEnergyUsage();
+        LOGGER.info("Charging optimization completed.");
+    }
+
+    public void reportChargingStatus() {
+        // Example: Report charging status by calling EnergyManagementSystem's report method
+        energyManagementSystem.reportEnergyStatus();
     }
 
     public synchronized void occupy(Car car) {
@@ -65,9 +92,6 @@ public class ChargingStation implements Serializable {
         return currentCapacity > 0; // Check if there are available slots for charging
     }
     
-//    public synchronized boolean getLocation() {
-//        return location > 0; // Check if there are available slots for charging
-//    } 
     
     public String getLocation() {
         return location;
