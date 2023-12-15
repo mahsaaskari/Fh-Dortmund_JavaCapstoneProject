@@ -63,27 +63,29 @@ public class ChargingStationSimulation {
     
 //    logs files for each day, each energy source, and system as a whole
     
-    private static void configureLogging() {
-        Logger rootLogger = Logger.getLogger("");
-        rootLogger.setLevel(Level.INFO);
+private static void configureLogging() {
+    Logger rootLogger = Logger.getLogger("");
+    rootLogger.setLevel(Level.INFO);
 
-        try {
-            Handler fileHandler = new FileHandler("logs/%g_system.log", 1000000, 10, true); // System log file
-            fileHandler.setFormatter(new SimpleFormatter());
-            rootLogger.addHandler(fileHandler);
+    try {
+        // System log file
+        Handler fileHandler = new FileHandler("logs/system_%g.log", 1000000, 10, true);
+        fileHandler.setFormatter(new SimpleFormatter());
+        rootLogger.addHandler(fileHandler);
 
-            // Create loggers for each energy source
-            for (EnergySource source : EnergySource.values()) {
-                Logger sourceLogger = Logger.getLogger(source.toString());
-                sourceLogger.setLevel(Level.INFO);
-                Handler sourceHandler = new FileHandler("logs/" + source.toString() + "_%g.log", 1000000, 10, true);
-                sourceHandler.setFormatter(new SimpleFormatter());
-                sourceLogger.addHandler(sourceHandler);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        // Create loggers for each energy source
+        for (EnergySource source : EnergySource.values()) {
+            Logger sourceLogger = Logger.getLogger(source.toString());
+            sourceLogger.setLevel(Level.INFO);
+            Handler sourceHandler = new FileHandler("logs/" + source.toString() + "_%g.log", 1000000, 10, true);
+            sourceHandler.setFormatter(new SimpleFormatter());
+            sourceLogger.addHandler(sourceHandler);
         }
+    } catch (IOException e) {
+        e.printStackTrace();
     }
+}
+
 
     private static EnergySource getRandomEnergySource() {
         EnergySource[] sources = EnergySource.values();
