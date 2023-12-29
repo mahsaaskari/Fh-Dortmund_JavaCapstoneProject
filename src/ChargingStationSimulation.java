@@ -63,7 +63,7 @@ public class ChargingStationSimulation {
     
 //    logs files for each day, each energy source, and system as a whole
     
-    private static void configureLogging() {
+    public static void configureLogging() {
         Logger rootLogger = Logger.getLogger("");
         rootLogger.setLevel(Level.INFO);
 

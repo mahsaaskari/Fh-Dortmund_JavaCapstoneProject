@@ -19,7 +19,7 @@ public class ChargingSimulation {
 	        executorService.shutdown();
 	    }
 
-	    private static EnergySource getRandomEnergySource() {
+	    static EnergySource getRandomEnergySource() {
 	        EnergySource[] sources = EnergySource.values();
 	        int index = (int) (Math.random() * sources.length);
 	        return sources[index];

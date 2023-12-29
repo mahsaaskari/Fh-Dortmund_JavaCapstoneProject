@@ -56,4 +56,4 @@ class UsersLoggers extends BaseLogger {
 	 }
 }
 
-// we will be adding more as project develops
+

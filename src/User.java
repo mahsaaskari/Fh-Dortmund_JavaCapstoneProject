@@ -1,5 +1,3 @@
-// user class possibly representing multi-user access to the charging station
-// It ha attributes such as name, carType and maxWaitTime which represents time allowed to wait at a particular point before moving on to the next
 public class User {
 	private String fullname;
 	private String carType;
@@ -11,6 +9,7 @@ public class User {
 		this.maxWaitTime = maxWaitTime;
 		this.carType = carType;
 		
+		userLog = new UsersLoggers();
 		userLog.logActivity("fullname is: " + fullname + " and Max Wait Time is: " + maxWaitTime);
 	}
 
